@@ -6,7 +6,7 @@ fasta2SBH: prepares a transcriptome assembly for annotation using single-best-hi
 (SBH) method of the KEGG KAAS tool, by throwing out all isoforms except the longest one
 for each gene.
 
-Created by Misha Matz (matz@utexas.edu), modified by Michael Studivan (mstudiva@fau.edu) 
+Created by Misha Matz (matz@utexas.edu), modified by Michael Studivan (studivanms@gmail.com)
 
 arg1: transcriptome fasta file. Assumes there is 'isogroup' annotations in the
 	  fasta header for 454 assemblies, such as 'isogroup00234', or the fasta header has

@@ -1,6 +1,6 @@
 # Transcriptome Annotation, version May 25, 2021
-# Created by Misha Matz (matz@utexas.edu), modified by Michael Studivan (studivanms@gmail.com)
-# for use in generating transcriptome annotation files for Montastraea cavernosa
+# Created by Misha Matz (matz@utexas.edu), modified by Michael Studivan (studivanms@gmail.com) for use on FAU's HPC (KoKo)
+# for use in generating transcriptome annotation files, example given for Montastraea cavernosa
 # also includes the concatention of M. cavernosa and Cladocopium transcriptomes
 
 #------------------------------
@@ -163,7 +163,7 @@ cat Mcavernosa_Cladocopium_248.brtab | perl -pe 's/.+(KOG\d+)\s.+/$1/' | uniq | 
 # updated based on Misha Matz's new GO and KOG annotation steps on github: https://github.com/z0on/emapper_to_GOMWU_KOGMWU
 
 # selecting the longest contig per isogroup (also renames using isogroups based on Mcavernosa and Cladocopium annotations):
-fasta2SBH_MS.pl Mcavernosa_Cladocopium_iso_PRO.fas >Mcavernosa_Cladocopium_out_PRO.fas
+fasta2SBH_Mcav.pl Mcavernosa_Cladocopium_iso_PRO.fas >Mcavernosa_Cladocopium_out_PRO.fas
 
 # scp your *_out_PRO.fas file to laptop, submit it to
 http://eggnog-mapper.embl.de
