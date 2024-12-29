@@ -36,7 +36,7 @@ use Bio::SeqIO;
 $mod3="Bio::SearchIO";
 unless(eval("require $mod3")) {print "$mod3 not found. Exiting\n"; exit;}
 use Bio::SearchIO;
-$dep2 = "ExcludeFasta_2021.pl";
+$dep2 = "ExcludeFasta_v2.pl";
 unless (defined(which($dep2))) {print $dep2, " not found. Exiting.\n"; exit;}
 
 # -- data input
@@ -69,7 +69,7 @@ foreach $c (@cons)
 		{open(TL, ">discard.list");
 		for (@tk) {print TL $_, "\n";}
 		close(TL);
-		system("ExcludeFasta_2021.pl discard.list $rfil tq.fasta");
+		system("ExcludeFasta_v2.pl discard.list $rfil tq.fasta");
 		}
 	($conlabel, $condb) = split(",", $c);
 	$cth{$conlabel} = 0;
@@ -111,7 +111,7 @@ if ($ntk>0)
 	{open(TL, ">discard.list");
 	for (@tk) {print TL $_, "\n";}
 	close(TL);
-	system("ExcludeFasta_2021.pl discard.list $rfil tq.fasta");
+	system("ExcludeFasta_v2.pl discard.list $rfil tq.fasta");
 	}
 system("cp tq.fasta $ofil");
 
@@ -131,6 +131,6 @@ print "\n";
 # -- clean up after yourself!
 #my $fdbname = $rfil.".x";
 #system("rm $fdbname\*");
-#system("rm tq.f*");
-#system("rm error.log") if (-e "error.log");
-#system("rm formatdb.log") if (-e "formatdb.log");
+system("rm tq.f*");
+system("rm error.log") if (-e "error.log");
+system("rm formatdb.log") if (-e "formatdb.log");
