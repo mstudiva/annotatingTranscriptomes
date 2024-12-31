@@ -9,8 +9,9 @@ library(tibble)
 
 #### database download ####
 
+# Run once, then comment out
 # NOTE: this will require a lot of hard drive space, bandwidth, and time to process all the data from NCBI
-prepareDatabase('accessionTaxa.sql')
+# prepareDatabase('accessionTaxa.sql')
 
 
 #### data import and taxonomy generation ####
