@@ -15,32 +15,40 @@ my %isogroup_to_other;
 
 # Read isogroup to other identifier table
 open(my $isogroup_fh, "<", $isogroup_file) or die "Could not open $isogroup_file: $!";
-while (<$isogroup_fh>) {
-    chomp;
-    my ($isogroup_id, $other_identifier) = split /\t/;
-    $isogroup_to_other{$isogroup_id} = $other_identifier;
+while (my $line = <$isogroup_fh>) {
+    chomp $line;
+    my ($isogroup, $other) = split(/\t/, $line);
+    $isogroup_to_other{$isogroup} = $other;
 }
 close($isogroup_fh);
 
-# Process orthogroup to isogroup table and create the output
+# Hash to store unique output rows
+my %unique_rows;
+
+# Read orthogroup to isogroup table and generate output
 open(my $orthogroup_fh, "<", $orthogroup_file) or die "Could not open $orthogroup_file: $!";
 open(my $output_fh, ">", $output_file) or die "Could not open $output_file: $!";
 
-while (<$orthogroup_fh>) {
-    chomp;
-    my ($orthogroup_id, $isogroup_A, $isogroup_B) = split /\t/;
+while (my $line = <$orthogroup_fh>) {
+    chomp $line;
+    my ($orthogroup, $isogroup) = split(/\t/, $line);
 
-    # Check if the isogroup has a corresponding identifier
-    if (exists $isogroup_to_other{$isogroup_A}) {
-        print $output_fh "$orthogroup_id\t$isogroup_to_other{$isogroup_A}\n";
+    # Check if isogroup has a mapping to other identifier
+    if (exists $isogroup_to_other{$isogroup}) {
+        my $other = $isogroup_to_other{$isogroup};
+        my $output_line = "$orthogroup\t$isogroup\t$other";
+
+        # Store the output line in the hash to ensure uniqueness
+        $unique_rows{$output_line} = 1;
     }
-    if (exists $isogroup_to_other{$isogroup_B}) {
-        print $output_fh "$orthogroup_id\t$isogroup_to_other{$isogroup_B}\n";
-    }
+}
+
+# Write unique rows to the output file
+foreach my $row (keys %unique_rows) {
+    print $output_fh "$row\n";
 }
 
 close($orthogroup_fh);
 close($output_fh);
 
-print "Processing complete. Output saved to $output_file.\n";
-
+__END__

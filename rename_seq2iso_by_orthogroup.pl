@@ -15,32 +15,44 @@ my %gene_to_contig;       # GeneID -> ContigID
 my %gene_to_orthogroup;   # GeneID -> OrthogroupID
 
 # Read the contig-to-gene file
-open(my $ctg_fh, '<', $contig_to_gene_file) or die "Cannot open $contig_to_gene_file: $!";
-while (<$ctg_fh>) {
-    chomp;
-    my ($contig, $gene) = split(/\t/);
+open(my $ctg_fh, '<', $contig_to_gene_file) or die "Could not open $contig_to_gene_file: $!";
+while (my $line = <$ctg_fh>) {
+    chomp $line;
+    my ($contig, $gene) = split(/\t/, $line);
     $gene_to_contig{$gene} = $contig;
 }
 close($ctg_fh);
 
 # Read the orthogroup-to-gene file
-open(my $ortho_fh, '<', $orthogroup_to_gene_file) or die "Cannot open $orthogroup_to_gene_file: $!";
-while (<$ortho_fh>) {
-    chomp;
-    my ($orthogroup, $geneA, $geneB) = split(/\t/);
-    $gene_to_orthogroup{$geneA} = $orthogroup if $geneA;
-    $gene_to_orthogroup{$geneB} = $orthogroup if $geneB;
+open(my $orth_fh, '<', $orthogroup_to_gene_file) or die "Could not open $orthogroup_to_gene_file: $!";
+while (my $line = <$orth_fh>) {
+    chomp $line;
+    my ($orthogroup, $gene) = split(/\t/, $line);
+    $gene_to_orthogroup{$gene} = $orthogroup;
 }
-close($ortho_fh);
+close($orth_fh);
 
-# Create the output file
-open(my $out_fh, '>', $output_file) or die "Cannot open $output_file: $!";
+# Hash to store unique output rows
+my %unique_rows;
+
+# Generate output based on mappings
+open(my $output_fh, '>', $output_file) or die "Could not open $output_file: $!";
 foreach my $gene (keys %gene_to_contig) {
     if (exists $gene_to_orthogroup{$gene}) {
-        print $out_fh "$gene_to_contig{$gene}\t$gene_to_orthogroup{$gene}\n";
+        my $contig = $gene_to_contig{$gene};
+        my $orthogroup = $gene_to_orthogroup{$gene};
+        my $output_line = "$contig\t$gene\t$orthogroup";
+
+        # Store the output line in the hash to ensure uniqueness
+        $unique_rows{$output_line} = 1;
     }
 }
-close($out_fh);
 
-print "Output written to $output_file\n";
+# Write unique rows to the output file
+foreach my $row (keys %unique_rows) {
+    print $output_fh "$row\n";
+}
 
+close($output_fh);
+
+__END__
